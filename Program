@@ -1,0 +1,122 @@
+// ορισμος ακιδων και μεταβλητων
+const int stepPin = 2; 
+const int dirPin = 5;
+const int bstepPin = 3; 
+const int bdirPin = 6;
+const int rightSensorPin = A0;
+const int leftSensorPin = A1;
+const int upSensorPin = A2;
+const int downSensorPin = A3;
+int rightSensorRead = 0;
+int leftSensorRead = 0;
+int rightLightPct = 0;
+int leftLightPct = 0;
+int degreeChange = 0;
+int upSensorRead = 0;
+int downSensorRead = 0;
+int upLightPct = 0;
+int downLightPct = 0;
+int bdegreeChange = 0;
+ 
+void setup() {
+  // ορισμος ακιδων ως εξοδους
+  Serial.begin(9600); //παρακολουθηση στην οθονη
+  
+  pinMode(stepPin,OUTPUT); 
+  pinMode(dirPin,OUTPUT);
+  pinMode(rightSensorPin,INPUT);
+  pinMode(leftSensorPin,INPUT);
+  pinMode(bstepPin,OUTPUT); 
+  pinMode(bdirPin,OUTPUT);
+  pinMode(upSensorPin,INPUT);
+  pinMode(downSensorPin,INPUT);
+}
+void loop()
+{
+  rightSensorRead = analogRead(rightSensorPin);
+  leftSensorRead = analogRead(leftSensorPin);
+  upSensorRead = analogRead(upSensorPin);
+  downSensorRead = analogRead(downSensorPin);
+  
+  rightLightPct = map(rightSensorRead, 0, 1023, 0, 100); //επανακαθορισμος τιμων
+  leftLightPct = map(leftSensorRead, 0, 1023, 0, 100);
+  degreeChange = abs(rightLightPct-leftLightPct);
+  upLightPct = map(upSensorRead, 0, 1023, 0, 100);
+  downLightPct = map(downSensorRead, 0, 1023, 0, 100);
+  bdegreeChange = abs(upLightPct-downLightPct);
+  
+  Serial.print("right = "); //παρακολουθηση οθονης(Δ/Α)
+  Serial.print(rightSensorRead);
+  Serial.print(" left = ");
+  Serial.print(leftSensorRead);
+  Serial.print(" Pct r/l = ");
+  Serial.print(rightLightPct);
+  Serial.print("/");
+  Serial.print(leftLightPct);
+  Serial.print("  degreeChange = ");
+  Serial.println(degreeChange);
+  
+   if(rightLightPct < 10 && leftLightPct < 10)
+   {
+     Serial.println("ανυπαρκτος ηλιος");
+   }
+   else if(rightLightPct > leftLightPct && degreeChange > 2)
+   {
+     digitalWrite(dirPin,LOW); //κινητηρας προς τ αριστερα
+    
+     for(int x = 0; x < 2; x++) // κανει 200 παλμους για μια πληρη περιστροφη
+     {
+       digitalWrite(stepPin,HIGH);
+       delayMicroseconds(1000);
+       digitalWrite(stepPin,LOW);
+       delayMicroseconds(1000);
+     }
+   }
+   else if (rightLightPct < leftLightPct && degreeChange > 2)
+   {
+     digitalWrite(dirPin,HIGH); // κινητηρας προς τα δεξια
+     
+     for(int x = 0; x < 2; x++) //κανει 200 παλμους για μια πληρη περιστροφη
+     {
+       digitalWrite(stepPin,HIGH); 
+       delayMicroseconds(1000); 
+       digitalWrite(stepPin,LOW); 
+       delayMicroseconds(1000); 
+     }
+   }
+
+   if(upLightPct < 10 && downLightPct < 10)
+   {
+     Serial.println("ανυπαρκτος ηλιος");
+   }
+   else if(upLightPct > downLightPct && bdegreeChange > 2)
+   {
+     digitalWrite(bdirPin,LOW); //κινητηρας προς τα πανω
+    
+     for(int x = 0; x < 2; x++) // κανει 200 παλμους για μια πληρη περιστροφη
+     {
+       digitalWrite(bstepPin,HIGH);
+       delayMicroseconds(1000);
+       digitalWrite(bstepPin,LOW);
+       delayMicroseconds(1000);
+     }
+   }
+   else if (upLightPct < downLightPct && bdegreeChange > 2)
+   {
+     digitalWrite(bdirPin,HIGH); // κινητηρας προς τα κατω
+     
+     for(int x = 0; x < 2; x++) //κανει 200 παλμους για μια πληρη περιστροφη
+     {
+       digitalWrite(bstepPin,HIGH); 
+       delayMicroseconds(1000); 
+       digitalWrite(bstepPin,LOW); 
+       delayMicroseconds(1000); 
+     }
+   }
+   
+   
+     //Οταν βλεπουν και τα 2 φως με degreeChange < του 5  μενουν ακινητα!!
+   
+ 
+ delay(10); //  χιλιοστα δευτερολεπτου καθυστεριση 
+}
