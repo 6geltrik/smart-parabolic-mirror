@@ -4,6 +4,8 @@
 
 <img src = “Photos/30.jpg” width = 200>
 
+<img src = “Photos/31.jpg.jpg” width = 200>
+
 Υλικά:
 
 1. ARDUINO UNO
