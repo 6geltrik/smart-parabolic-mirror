@@ -74,7 +74,7 @@
 
 Τέλος προγραμματίζουμε το Arduino ώστε να δέχεται τα σήματα των αισθητήρων και να κινεί αναλόγως το κάτοπτρο.
 
-<img src = Photos/IMG_20210314_115410.jpg width = 1000>
+<img src = Photos/IMG_20210314_115410.jpg width = 500>
 
 Το πραγραμμα ειναι εδω: https://github.com/6geltrik/smart-parabolic-mirror/blob/master/Program
 
